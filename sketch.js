@@ -7,11 +7,11 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
-
+var score=0;
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    setBack();
 }
 
 function setup(){
@@ -45,18 +45,28 @@ function setup(){
 }
 
 function draw(){
+    if(backgroundImg)
+    {
     background(backgroundImg);
+    }
+
+    textSize(20);
+    fill("black");
+    text("score: "+score, width-100, 50);
+
     Engine.update(engine);
     //strokeWeight(4);
     box1.display();
     box2.display();
     ground.display();
     pig1.display();
+    pig1.score();
     log1.display();
 
     box3.display();
     box4.display();
     pig3.display();
+    pig3.score();
     log3.display();
 
     box5.display();
@@ -66,7 +76,8 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display();   
+
 }
 
 function mouseDragged(){
@@ -85,4 +96,30 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+async function setBack () 
+{
+    var APIresponse = await fetch("http://worldclockapi.com/api/json/est/now");
+
+    var APIjson = await APIresponse.json();
+    //console.log(APIjson);
+
+    var date = APIjson.currentDateTime;
+    //console.log(date);
+
+    var hour = date.slice(11,13);
+    console.log(hour);
+
+    var bg
+//"2020-10-23T21:30-04:00"- YYYY-MM-DDTHH:MM:SS"
+    if(hour >= 06 || hour <= 18)
+    {
+        bg ="sprites/bg.png";
+    }
+    else
+    {
+        bg ="sprites/bg2.jpg"; 
+    }
+    backgroundImg=loadImage(bg);
 }
